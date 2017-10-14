@@ -5,6 +5,7 @@ var express     = require('express');
 var app         = express();
 var morgan      = require('morgan');
 var mongoose    = require('mongoose');
+var bodyParser = require('body-parser');
 
 var config  = require('./config'); // get our config file
 var Weather = require('./app/models/weather'); // get our mongoose model    
@@ -18,6 +19,8 @@ var db = mongoose.connect(config.database, {
 
 // use morgan to log requests to the console
 app.use(morgan('dev'));
+// support encoded bodies
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // =======================
 // routes ================
@@ -29,12 +32,12 @@ app.get('/', function(req, res) {
 
 
 // add data from weather station to database
-app.get('/add', function(req, res) {
+app.post('/add', function(req, res) {
 
   // get parameters from HTTP /GET
   var date  = Date.now();
-  var temp  = req.param('temp');
-  var press = req.param('press');
+  var temp  = req.body.temp;
+  var press = req.body.press;
   
   if ((temp == null) | (press == null)) {
 	  res.send('success : false');
