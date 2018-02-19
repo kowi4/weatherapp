@@ -1,18 +1,15 @@
-// =======================
-// get the packages we need ============
-// =======================
+﻿// get the packages
 var express     = require('express');
 var app         = express();
 var morgan      = require('morgan');
 var mongoose    = require('mongoose');
 var bodyParser = require('body-parser');
 
-var config  = require('./config'); // get our config file
-var Weather = require('./app/models/weather'); // get our mongoose model    
-// =======================
-// configuration =========
-// =======================
-var port = process.env.PORT || 8080; // used to create, sign, and verify tokens
+var config  = require('./config'); // get config file
+var Weather = require('./app/models/weather'); // get mongoose model    
+
+// configuration 
+var port = process.env.PORT || 8080;
 var db = mongoose.connect(config.database, {
                           useMongoClient: true,
 }); // connect to database
@@ -22,19 +19,13 @@ app.use(morgan('dev'));
 // support encoded bodies
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// =======================
-// routes ================
-// =======================
-// basic route
+// main route
 app.get('/', function(req, res) {
     res.send('Hello! ');
 });
 
-
 // add data from weather station to database
 app.post('/add', function(req, res) {
-
-  // get parameters from HTTP /GET
   var date  = Date.now();
   var temp  = req.body.temp;
   var press = req.body.press;
@@ -44,14 +35,12 @@ app.post('/add', function(req, res) {
 	  console.log('data not saved');
   }
   else {
-	    // create new weather data
       var newWeather = new Weather({ 
       date: date,  
       temperature: temp, 
       pressure: press  
       });
 
-      // save weather data
       newWeather.save(function(err) {
       if (err) throw err;
 
@@ -73,8 +62,6 @@ app.get('/weatherdelete', function(req, res) {
   });
 });
 
-// =======================
-// start the server ======
-// =======================
+// start the server
 app.listen(port);
 console.log('Server running at http://localhost:' + port);
