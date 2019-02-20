@@ -8,6 +8,8 @@ var bodyParser = require('body-parser');
 var config  = require('./config'); // get config file
 var Weather = require('./app/models/weather'); // get mongoose model    
 
+var sendMagicPacket = false;
+
 // configuration 
 var port = process.env.PORT || 8080;
 var db = mongoose.connect(config.database, {
@@ -60,6 +62,20 @@ app.get('/weatherdelete', function(req, res) {
   Weather.remove({}, function(err) { 
     console.log('collection removed') 
   });
+});
+
+app.get('/wakeup', function (req, res) {
+    sendMagicPacket = true;
+    console.log('set MagicPacket to true');
+});
+
+app.get('/shouldwakeup', function (req, res) {
+    if (sendMagicPacket) {
+        sendMagicPacket = false;
+        console.log('set MagicPacket to false');
+        res.send('wakePC');
+        console.log('wakePC');
+    }
 });
 
 // start the server
