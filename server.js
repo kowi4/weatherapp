@@ -77,6 +77,10 @@ app.get('/shouldwakeup', function (req, res) {
         res.send('wakePC');
         console.log('wakePC');
     }
+    else
+    {
+        res.send('0');
+    }
 });
 
 // start the server
