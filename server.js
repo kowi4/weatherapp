@@ -66,6 +66,7 @@ app.get('/weatherdelete', function(req, res) {
 
 app.get('/wakeup', function (req, res) {
     sendMagicPacket = true;
+    res.send('set MagicPacket to true and it should be send in 5s');
     console.log('set MagicPacket to true');
 });
 
