@@ -74,7 +74,7 @@ app.get('/shouldwakeup', function (req, res) {
     if (sendMagicPacket) {
         sendMagicPacket = false;
         console.log('set MagicPacket to false');
-        res.send('wakePC');
+        res.send('1');
         console.log('wakePC');
     }
     else
