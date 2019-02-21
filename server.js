@@ -80,6 +80,7 @@ app.get('/shouldwakeup', function (req, res) {
     else
     {
         res.send('0');
+        console.log('DoNotWakePC');
     }
 });
 
