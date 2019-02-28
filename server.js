@@ -4,7 +4,7 @@ var app         = express();
 var morgan      = require('morgan');
 var mongoose    = require('mongoose');
 var bodyParser = require('body-parser');
-
+var path = require('path');
 var config  = require('./config'); // get config file
 var Weather = require('./app/models/weather'); // get mongoose model    
 
@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // main route
 app.get('/', function(req, res) {
-    res.send('Hello! ');
+    res.sendFile(path.join(__dirname, '\index.html'));
 });
 
 // add data from weather station to database
@@ -64,9 +64,9 @@ app.get('/weatherdelete', function(req, res) {
   });
 });
 
-app.get('/wakeup', function (req, res) {
+app.post('/wakeup', function (req, res) {
     sendMagicPacket = true;
-    res.send('set MagicPacket to true and it should be send in 5s');
+    res.send('Sending request for waking PC...');
     console.log('set MagicPacket to true');
 });
 
