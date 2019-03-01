@@ -9,12 +9,14 @@ var config  = require('./config'); // get config file
 var Weather = require('./app/models/weather'); // get mongoose model    
 
 var sendMagicPacket = false;
-
+var lastConnectionDate = Date.now();
 // configuration 
 var port = process.env.PORT || 8080;
 var db = mongoose.connect(config.database, {
                           useMongoClient: true,
 }); // connect to database
+
+app.set('view engine', 'ejs');
 
 // use morgan to log requests to the console
 app.use(morgan('dev'));
@@ -23,7 +25,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // main route
 app.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname, '\index.html'));
+	var arduinoOnline = "Offline";
+	if(Date.now() - lastConnectionDate < 5000)
+		arduinoOnline = "Online";
+    res.render('index', { arduinoOnline: arduinoOnline });
 });
 
 // add data from weather station to database
@@ -64,6 +69,10 @@ app.get('/weatherdelete', function(req, res) {
   });
 });
 
+app.get('/wakeup', function (req, res) {
+    res.redirect('/');
+});
+
 app.post('/wakeup', function (req, res) {
     sendMagicPacket = true;
     res.send('Sending request for waking PC...');
@@ -71,6 +80,7 @@ app.post('/wakeup', function (req, res) {
 });
 
 app.get('/shouldwakeup', function (req, res) {
+	lastConnectionDate = Date.now();
     if (sendMagicPacket) {
         sendMagicPacket = false;
         console.log('set MagicPacket to false');
